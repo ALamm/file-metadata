@@ -2,6 +2,9 @@
 
 var path = process.cwd();
 var ClickHandler = require(path + '/app/controllers/clickHandler.server.js');
+var fs = require("fs"); //Load the filesystem module
+var multer  = require('multer'); // Load the multer module which handles file uploads
+var upload = multer({ dest: 'uploads/' });
 
 module.exports = function (app, passport) {
 
@@ -9,11 +12,20 @@ module.exports = function (app, passport) {
 		if (req.isAuthenticated()) {
 			return next();
 		} else {
-			res.redirect('/login');
+			//res.redirect('/login');  // REMOVE AUTHENTICATION - HAVING TROUBLE WITH OAUTH ERRORS
+			return next();
 		}
 	}
 
 	var clickHandler = new ClickHandler();
+	
+	app.post('/api/fileanalyse', upload.single('the-file'), function (req, res, next) {
+	  // req.file is the `uploadedfile` file 
+	  // req.body will hold the text fields, if there were any 
+
+		var size = req.file.size;
+		res.send(size);
+	});
 
 	app.route('/')
 		.get(isLoggedIn, function (req, res) {
@@ -34,11 +46,6 @@ module.exports = function (app, passport) {
 	app.route('/profile')
 		.get(isLoggedIn, function (req, res) {
 			res.sendFile(path + '/public/profile.html');
-		});
-
-	app.route('/api/:id')
-		.get(isLoggedIn, function (req, res) {
-			res.json(req.user.github);
 		});
 
 	app.route('/auth/github')

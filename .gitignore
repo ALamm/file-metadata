@@ -1,3 +1,5 @@
 node_modules/
+app
 .eslintrc
 .env
+instructions.txt

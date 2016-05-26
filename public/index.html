@@ -3,37 +3,38 @@
 <html>
 
 	<head>
-		<title>Clementine.js - The elegant and lightweight full stack JavaScript boilerplate.</title>
+		<title>File Metadata Microservice</title>
 		
 		<link href="/public/css/main.css" rel="stylesheet" type="text/css">
 	</head>
 
-	<header>
-		<p>Welcome, <span id="display-name"></span>!</p>
-		<a class="menu" href="/profile">Profile</a>
-		<p>|</p>
-		<a class="menu" href="/logout">Logout</a>
-	</header>
 
 	<body>
 		<div class="container">
-			<img src="/public/img/clementine_150.png" />
-			<br />
-			<p class="clementine-text">Clementine.js</p>
-		</div>
-	
-		<div class="container">
-			<p>You have clicked the button <span id="click-nbr"></span> times.</p>
-			<br />
-			<div class="btn-container">
-				<button type="submit" class="btn btn-add">CLICK ME!</button>
-				<button class="btn btn-delete">RESET</button>
+			<div class="innerbox">
+
+				<div class="innerstory">
+					<h1>File Metadata Microservice</h1>					
+					<h2>User Stories:</h2>
+					<ol>
+						<li>User Story: I can submit a FormData object that includes a file upload.</li>
+						<li>User Story: When I submit something, I will receive the file size in bytes within the JSON response.</li>
+
+					</ol>
+					<h2>TRY IT:</h2>
+					<p>
+						The following upload form will post to the following url, display the file size in JSON format, and then delete the original file from the server. 
+						<a href="https://file-metadata-alexanderlamm.c9users.io/api/fileanalyse">
+						https://file-metadata-alexanderlamm.c9users.io/api/fileanalyse</a>
+					</p>
+					<form method="post" enctype="multipart/form-data" action="/api/fileanalyse">
+						<p><input type="file" name="upl"/></p>
+						<p><input type="submit"/></p>
+					</form>
+				</div>
 			</div>
 		</div>
-		
-		<script type="text/javascript" src="common/ajax-functions.js"></script>
-		<script type="text/javascript" src="controllers/clickController.client.js"></script>
-		<script type="text/javascript" src="controllers/userController.client.js"></script>
+
 	</body>
 
 </html>

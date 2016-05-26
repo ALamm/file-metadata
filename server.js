@@ -1,31 +1,44 @@
 'use strict';
 
 var express = require('express');
-var routes = require('./app/routes/index.js');
-var mongoose = require('mongoose');
-var passport = require('passport');
-var session = require('express-session');
+var path = process.cwd();
+var multer = require('multer');
+var	bodyParser = require('body-parser');
+var fs = require('fs-extra');
 
-var app = express();
-require('dotenv').load();
-require('./app/config/passport')(passport);
+var app = new express();
+app.use(bodyParser.json());
 
-mongoose.connect(process.env.MONGO_URI);
+app.get('/', function(req, res){
+  res.sendFile(path + '/public/index.html');
+});
 
-app.use('/controllers', express.static(process.cwd() + '/app/controllers'));
-app.use('/public', express.static(process.cwd() + '/public'));
-app.use('/common', express.static(process.cwd() + '/app/common'));
+app.post('/api/fileanalyse', multer({ dest: './uploads/data'}).single('upl'), function(req,res){
+	console.log(req.body); //form fields
+	/* example output:
+	{ title: 'abc' }
+	 */
+	var obj = {'file size in bytes':  req.file.size};
 
-app.use(session({
-	secret: 'secretClementine',
-	resave: false,
-	saveUninitialized: true
-}));
+	// assume this directory has a lot of files and folders 
+	fs.emptyDir(path + '/uploads/data', function (err) {
+	  if (!err) console.log('all files are removed!')
+	})
 
-app.use(passport.initialize());
-app.use(passport.session());
-
-routes(app, passport);
+	res.json(obj); //form files
+		/* example output:
+	            { fieldname: 'upl',
+	              originalname: 'grumpy.png',
+	              encoding: '7bit',
+	              mimetype: 'image/png',
+	              destination: './uploads/',
+	              filename: '436ec561793aa4dc475a88e84776b1b9',
+	              path: 'uploads/436ec561793aa4dc475a88e84776b1b9',
+	              size: 277056 }
+		 */
+	 
+	res.status(204).end();
+});
 
 var port = process.env.PORT || 8080;
 app.listen(port,  function () {
